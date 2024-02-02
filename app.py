@@ -81,6 +81,29 @@ def notifications_index():
 
     return jsonify(notes_list)
 
+@app.route('/notification/<int:id>', methods=['GET'])
+def get_one_notification(id):
+    conn = get_db_connection()
+    query = '''
+            SELECT notifications.id, notifications.phone_number, notifications.personalization,
+                   templates.body AS template_body
+            FROM notifications
+            JOIN templates ON notifications.template_id = templates.id
+            WHERE notifications.id = ?
+        '''
+    notification = conn.execute(query, (id,)).fetchone()
+    conn.close()
+
+    if notification is None:
+        return 'Notification not found', 404
+
+    content = notification['template_body'].replace('(personal)', notification['personalization'])
+
+    notification_dict = dict(notification)
+    notification_dict['content'] = content
+
+    return jsonify(notification_dict)
+
 @app.route('/notification', methods=['POST'])
 def create_notification():
     notification_data = request.json
