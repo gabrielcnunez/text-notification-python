@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
@@ -29,3 +29,20 @@ def show(id):
         return 'Template not found', 404
     
     return jsonify(dict(template))
+
+@app.route('/template', methods=['POST'])
+def create_template():
+    template_data = request.json
+    
+    if 'body' not in template_data:
+        return 'Invalid template data', 400
+    
+    conn = get_db_connection()
+    query = 'INSERT INTO templates (body) VALUES (?)'
+    cursor = conn.execute(query, (template_data['body'],))
+    template_id = cursor.lastrowid
+
+    conn.commit()
+    conn.close()
+
+    return jsonify({'id': template_id, 'body': template_data['body']}), 201
