@@ -69,3 +69,14 @@ def update_template_put(id):
     conn.close()
 
     return jsonify({'id': id, 'body': updated_template_data['body']}), 200
+
+@app.route('/notification', methods=['GET'])
+def get_all_notifications():
+    conn = get_db_connection()
+    query = 'SELECT * FROM notifications'
+    notes = conn.execute(query).fetchall()
+    conn.close()
+
+    notes_list = [{'id': note['id'], 'phone_number': note['phone_number'], 'personalization': note['personalization'], 'template_id': note['template_id']} for note in notes]
+
+    return jsonify(notes_list)
