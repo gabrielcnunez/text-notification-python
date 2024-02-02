@@ -34,8 +34,8 @@ def show(id):
 def create_template():
     template_data = request.json
     
-    if 'body' not in template_data:
-        return 'Invalid template data', 400
+    if 'body' not in template_data or not template_data['body'].strip():
+        return 'Template body cannot be blank', 400
     
     conn = get_db_connection()
     query = 'INSERT INTO templates (body) VALUES (?)'
