@@ -27,3 +27,10 @@ def test_show_endpoint_happy(client):
 
     assert data['id'] == 1
     assert data['body'] == 'Hello, (personal). How are you today, (personal)?'
+
+def test_show_endpoint_sad(client):
+    non_existing_template_id = 999999
+    response = client.get(f'/template/{non_existing_template_id}')
+
+    assert response.status_code == 404
+    assert b'Template not found' in response.data
