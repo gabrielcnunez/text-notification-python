@@ -85,8 +85,19 @@ def notifications_index():
 def create_notification():
     notification_data = request.json
 
+    required_fields = ['phone_number', 'template_id']
+    for field in required_fields:
+        if field not in notification_data:
+            return f'Missing required field: {field}', 400
+    
     conn = get_db_connection()
 
+    template_check_query = 'SELECT id FROM templates WHERE id = ?'
+    template_exists = conn.execute(template_check_query, (notification_data['template_id'],)).fetchone()
+
+    if not template_exists:
+        return 'Invalid template_id', 400
+    
     query = 'INSERT INTO notifications (phone_number, personalization, template_id) VALUES (?, ?, ?)'
     cursor = conn.execute(query, (
         notification_data['phone_number'],
@@ -96,6 +107,9 @@ def create_notification():
 
     notification_id = cursor.lastrowid
     conn.commit()
-
     created_notification = conn.execute('SELECT * FROM notifications WHERE id = ?', (notification_id,)).fetchone()
+    conn.close()
+    
     return jsonify(dict(created_notification)), 201
+
+        
