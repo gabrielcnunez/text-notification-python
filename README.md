@@ -25,7 +25,7 @@ This project was designed and developed to mirror a simplied, pared down version
 
 *Design Decisions:*
 
-- In place of an Object Relational Mappers, SQL queries were used to obtain appropriate database information
+- In place of an Object Relational Mapper, SQL queries were used to obtain appropriate database information
 - All endpoints methods contained in single ```app.py``` to reflect simplicity of application
 
 <br>
@@ -194,10 +194,10 @@ This project was designed and developed to mirror a simplied, pared down version
 
 - Coverage reports
 - Containerization using Docker
-- Creating YAML file to display user endpoints graphically using Swagger UI
+- Creating YAML file to display user endpoints graphically with Swagger UI
 - DRY-ing up code in ```app.py``` file to slim down methods
 - Mocking test data using factories
-- Using an ORM (such as SQLAlchemy) to convert database information into objects for easier manipulation
+- Using an ORM (such as SQLAlchemy) to convert information into objects for easier data manipulation
 - Abstracting models, routes, and controllers into an MVC-style architecture
 
 <p align="right">(<a href="#top">back to top</a>)</p>
