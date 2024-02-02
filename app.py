@@ -80,3 +80,36 @@ def notifications_index():
     notes_list = [{'id': note['id'], 'phone_number': note['phone_number'], 'personalization': note['personalization'], 'template_id': note['template_id']} for note in notes]
 
     return jsonify(notes_list)
+
+@app.route('/notification', methods=['POST'])
+def create_notification():
+    notification_data = request.json
+
+    required_fields = ['phone_number', 'template_id']
+    for field in required_fields:
+        if field not in notification_data:
+            return f'Missing required field: {field}', 400
+    
+    conn = get_db_connection()
+
+    template_check_query = 'SELECT id FROM templates WHERE id = ?'
+    template_exists = conn.execute(template_check_query, (notification_data['template_id'],)).fetchone()
+
+    if not template_exists:
+        return 'Invalid template_id', 400
+    
+    query = 'INSERT INTO notifications (phone_number, personalization, template_id) VALUES (?, ?, ?)'
+    cursor = conn.execute(query, (
+        notification_data['phone_number'],
+        notification_data.get('personalization', None),
+        notification_data['template_id']
+    ))
+
+    notification_id = cursor.lastrowid
+    conn.commit()
+    created_notification = conn.execute('SELECT * FROM notifications WHERE id = ?', (notification_id,)).fetchone()
+    conn.close()
+    
+    return jsonify(dict(created_notification)), 201
+
+        
