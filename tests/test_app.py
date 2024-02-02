@@ -102,3 +102,13 @@ def test_update_template_sad_path_blank_body(client):
     with get_db_connection() as conn:
         conn.execute('DELETE FROM templates WHERE id = ?', (created_template['id'],))
         conn.commit()
+
+def test_notification_index_endpoint(client):
+    response = client.get('/notification')
+
+    assert response.status_code == 200
+    data = json.loads(response.data)
+    
+    assert len(data) > 0
+    assert 'id' in data[0]
+    assert 'body' in data[0]
