@@ -9,7 +9,7 @@ def get_db_connection():
     return conn
 
 @app.route('/template', methods=['GET'])
-def index():
+def templates_index():
     conn = get_db_connection()
     query = 'SELECT id, body FROM templates'
     templates = conn.execute(query).fetchall()
@@ -20,7 +20,7 @@ def index():
     return jsonify(template_list)
 
 @app.route('/template/<int:id>', methods=['GET'])
-def show(id):
+def templates_show(id):
     conn = get_db_connection()
     query = 'SELECT * FROM templates WHERE id = ?'
     template = conn.execute(query, (id,)).fetchone()
@@ -69,3 +69,14 @@ def update_template_put(id):
     conn.close()
 
     return jsonify({'id': id, 'body': updated_template_data['body']}), 200
+
+@app.route('/notification', methods=['GET'])
+def notifications_index():
+    conn = get_db_connection()
+    query = 'SELECT * FROM notifications'
+    notes = conn.execute(query).fetchall()
+    conn.close()
+
+    notes_list = [{'id': note['id'], 'phone_number': note['phone_number'], 'personalization': note['personalization'], 'template_id': note['template_id']} for note in notes]
+
+    return jsonify(notes_list)
