@@ -115,7 +115,7 @@ def test_notification_index_endpoint(client):
     assert 'personalization' in data[0]
     assert 'template_id' in data[0]
 
-def test_create_notification(client):
+def test_create_notification_happy(client):
     notification_data = {
         'phone_number': '+15709876543',
         'personalization': 'Michael Scott',
@@ -133,3 +133,23 @@ def test_create_notification(client):
     with get_db_connection() as conn:
         conn.execute('DELETE FROM notifications WHERE id = ?', (created_notification['id'],))
         conn.commit()
+
+def test_create_notification_sad_path_missing_phone_number(client):
+    notification_data = {
+        'template_id': 2
+    }
+    create_notification_response = client.post('/notification', json=notification_data)
+
+    assert create_notification_response.status_code == 400
+    assert b'Missing required field: phone_number' in create_notification_response.data
+
+def test_create_notification_sad_path_invalid_template_id(client):
+    notification_data = {
+        'phone_number': '+15709876543',
+        'personalization': 'Michael Scott',
+        'template_id': 999999
+    }
+    create_notification_response = client.post('/notification', json=notification_data)
+
+    assert create_notification_response.status_code == 400
+    assert b'Invalid template_id' in create_notification_response.data
