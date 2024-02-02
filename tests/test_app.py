@@ -128,6 +128,14 @@ def test_notification_show_happy(client):
     assert 'content' in retrieved_notification
     assert retrieved_notification['content'] == 'Hello, Jenny. How are you today, Jenny?'
 
+def test_notification_show_sad(client):
+    non_existent_notification_id = 999999
+
+    get_notification_response = client.get(f'/notification/{non_existent_notification_id}')
+
+    assert get_notification_response.status_code == 404
+    assert b'Notification not found' in get_notification_response.data
+
 def test_create_notification_happy(client):
     notification_data = {
         'phone_number': '+15709876543',
