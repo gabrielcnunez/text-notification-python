@@ -111,4 +111,6 @@ def test_notification_index_endpoint(client):
     
     assert len(data) > 0
     assert 'id' in data[0]
-    assert 'body' in data[0]
+    assert 'phone_number' in data[0]
+    assert 'personalization' in data[0]
+    assert 'template_id' in data[0]
