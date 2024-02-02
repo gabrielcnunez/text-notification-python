@@ -114,3 +114,22 @@ def test_notification_index_endpoint(client):
     assert 'phone_number' in data[0]
     assert 'personalization' in data[0]
     assert 'template_id' in data[0]
+
+def test_create_notification(client):
+    notification_data = {
+        'phone_number': '+15709876543',
+        'personalization': 'Michael Scott',
+        'template_id': 2
+    }
+    create_notification_response = client.post('/notification', json=notification_data)
+
+    assert create_notification_response.status_code == 201
+    created_notification = json.loads(create_notification_response.data)
+    assert 'id' in created_notification
+    assert created_notification['phone_number'] == notification_data['phone_number']
+    assert created_notification['personalization'] == notification_data['personalization']
+    assert created_notification['template_id'] == notification_data['template_id']
+
+    with get_db_connection() as conn:
+        conn.execute('DELETE FROM notifications WHERE id = ?', (created_notification['id'],))
+        conn.commit()
