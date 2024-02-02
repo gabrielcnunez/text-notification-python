@@ -35,7 +35,7 @@ def test_show_endpoint_sad(client):
     assert response.status_code == 404
     assert b'Template not found' in response.data
 
-def test_create_endpoint(client):
+def test_create_endpoint_happy(client):
     template_data = {
         'body': 'Happy birthday, (personal)!'
     }
@@ -52,4 +52,13 @@ def test_create_endpoint(client):
     with get_db_connection() as conn:
         conn.execute('DELETE FROM templates WHERE id = ?', (response_data['id'],))
         conn.commit()
+
+def test_create_endpoint_sad(client):
+    template_data = {
+        'body': ''
+    }
+    response = client.post('/template', json=template_data)
+
+    assert response.status_code == 400
+    assert b'Template body cannot be blank' in response.data
 
