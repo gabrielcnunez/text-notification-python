@@ -18,4 +18,14 @@ def index():
     template_list = [{'id': template['id'], 'body': template['body']} for template in templates]
 
     return jsonify(template_list)
-        
+
+@app.route('/template/<int:id>', methods=['GET'])
+def show(id):
+    conn = get_db_connection()
+    query = 'SELECT * FROM templates WHERE id = ?'
+    template = conn.execute(query, (id,)).fetchone()
+    conn.close()
+    if template is None:
+        return 'Template not found', 404
+    
+    return jsonify(dict(template))
