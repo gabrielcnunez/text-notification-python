@@ -94,6 +94,9 @@ def get_one_notification(id):
     notification = conn.execute(query, (id,)).fetchone()
     conn.close()
 
+    if notification is None:
+        return 'Notification not found', 404
+
     content = notification['template_body'].replace('(personal)', notification['personalization'])
 
     notification_dict = dict(notification)
