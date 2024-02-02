@@ -48,7 +48,7 @@ def create_template():
     return jsonify({'id': template_id, 'body': template_data['body']}), 201
 
 @app.route('/template/<int:id>', methods=['PUT'])
-def update_template(id):
+def update_template_put(id):
     conn = get_db_connection()
 
     existing_template = conn.execute('SELECT * FROM templates WHERE id = ?', (id,)).fetchone()
@@ -57,6 +57,10 @@ def update_template(id):
         return 'Template not found', 404
 
     updated_template_data = request.json
+
+    if 'body' not in updated_template_data or not updated_template_data['body'].strip():
+        conn.close()
+        return 'Template body cannot be blank', 400
 
     query = 'UPDATE templates SET body = ? WHERE id = ?'
     conn.execute(query, (updated_template_data['body'], id))
