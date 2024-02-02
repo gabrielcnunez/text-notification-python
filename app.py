@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask
+from flask import Flask, jsonify
 
 app = Flask(__name__)
 
@@ -11,11 +11,11 @@ def get_db_connection():
 @app.route('/template', methods=['GET'])
 def index():
     conn = get_db_connection()
-    templates = conn.execute('SELECT * FROM templates').fetchall()
+    query = 'SELECT id, body FROM templates'
+    templates = conn.execute(query).fetchall()
     conn.close()
-    template_list = []
-    for template in templates:
-        template_list.append({"body": template["body"]})
 
-    return {"templates": template_list}
+    template_list = [{'id': template['id'], 'body': template['body']} for template in templates]
+
+    return jsonify(template_list)
         
