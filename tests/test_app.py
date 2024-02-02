@@ -115,6 +115,19 @@ def test_notification_index_endpoint(client):
     assert 'personalization' in data[0]
     assert 'template_id' in data[0]
 
+def test_notification_show_happy(client):
+    notification_id = 1
+
+    get_notification_response = client.get(f'/notification/{notification_id}')
+
+    assert get_notification_response.status_code == 200
+    retrieved_notification = json.loads(get_notification_response.data)
+    assert 'id' in retrieved_notification
+    assert retrieved_notification['phone_number'] == '+15208675309'
+    assert retrieved_notification['personalization'] == 'Jenny'
+    assert 'content' in retrieved_notification
+    assert retrieved_notification['content'] == 'Hello, Jenny. How are you today, Jenny?'
+
 def test_create_notification_happy(client):
     notification_data = {
         'phone_number': '+15709876543',
