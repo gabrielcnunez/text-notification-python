@@ -81,4 +81,24 @@ def test_update_template_endpoint_happy(client):
         conn.execute('DELETE FROM templates WHERE id = ?', (retrieved_template['id'],))
         conn.commit()
 
+def test_update_template_sad_path_no_record(client):
+    non_existing_template_id = 999999
+    response = client.get(f'/template/{non_existing_template_id}')
 
+    assert response.status_code == 404
+    assert b'Template not found' in response.data
+
+def test_update_template_sad_path_blank_body(client):
+    create_response = client.post('/template', json={'body': 'Happy birthday, (personal)!'})
+    assert create_response.status_code == 201
+    created_template = json.loads(create_response.data)
+    template_id = created_template['id']
+
+    update_response = client.put(f'/template/{template_id}', json={'body': ''})
+    
+    assert update_response.status_code == 400
+    assert b'Template body cannot be blank' in update_response.data
+
+    with get_db_connection() as conn:
+        conn.execute('DELETE FROM templates WHERE id = ?', (created_template['id'],))
+        conn.commit()
