@@ -4,7 +4,7 @@
 </div>
 <br>
 
-This project was designed and developed to mirror a simplied, pared down version of the VA Notify platform.  The application contains seven endpoints for creating, reading, and updating templates and notifications, as well as a robust testing suite exploring both happy and sad user paths.
+This project was designed and developed to simulate a text notification service.  The application contains seven endpoints for creating, reading, and updating templates and notifications, as well as a robust testing suite exploring both happy and sad user paths.
 
 <br>
 
