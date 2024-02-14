@@ -25,8 +25,8 @@ This project was designed and developed to simulate a text notification service.
 
 *Design Decisions:*
 
-- In place of an Object Relational Mapper, SQL queries were used to obtain appropriate database information
-- All endpoints methods contained in single ```app.py``` to reflect simplicity of application
+- In place of an Object Relational Mapper, raw SQL queries were used to obtain appropriate database information
+- All endpoints methods contained in single ```app.py``` file to reflect simplicity of application
 
 <br>
 
