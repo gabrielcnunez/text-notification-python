@@ -1,10 +1,10 @@
 <div align="center">
-  <h1>Notification RESTful API</h1>
+  <h1>NotifyMe, a RESTful Python API</h1>
   <div align="center"><img src="assets/phone_notification.jpeg" alt="Smartphone with Notification Alerts"></div>
 </div>
 <br>
 
-This project was designed and developed to simulate a text notification service.  The application contains seven endpoints for creating, reading, and updating templates and notifications, as well as a robust testing suite exploring both happy and sad user paths.
+NotifyMe was designed and developed to simulate a text notification service.  The application contains seven endpoints for creating, reading, and updating templates and notifications, as well as a robust testing suite exploring both happy and sad user paths.
 
 <br>
 
